@@ -21,22 +21,22 @@ const NO_DEPOSIT = '0';
 
 // Wallet that simplifies using the wallet selector
 export class Wallet {
-  walletSelector: WalletSelector | null;
-  wallet: NearWallet | null;
+  walletSelector: WalletSelector | undefined;
+  wallet: NearWallet | undefined;
   network: Network | NetworkId;
-  createAccessKeyFor: string | null;
-  accountId: string | null
+  createAccessKeyFor: string | undefined;
+  accountId: string | undefined
 
-  constructor({ createAccessKeyFor = null, network = 'testnet' }) {
+  constructor({ createAccessKeyFor, network = 'testnet' }: { createAccessKeyFor: string | undefined; network?: Network | NetworkId}) {
     // Login to a wallet passing a contractId will create a local
     // key, so the user skips signing non-payable transactions.
     // Omitting the accountId will result in the user being
     // asked to sign all transactions.
-    this.walletSelector = null
-    this.wallet = null
+    this.walletSelector = undefined
+    this.wallet = undefined
     this.createAccessKeyFor = createAccessKeyFor
     this.network = 'testnet'
-    this.accountId = null
+    this.accountId = undefined
   }
 
   // To be called when the website loads
@@ -69,7 +69,7 @@ export class Wallet {
   signOut() {
     if (!this.wallet) return
     this.wallet.signOut();
-    this.wallet = this.accountId = this.createAccessKeyFor = null;
+    this.wallet = this.accountId = this.createAccessKeyFor = undefined;
     window.location.replace(window.location.origin + window.location.pathname);
   }
 
