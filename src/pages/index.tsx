@@ -12,7 +12,6 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
   const [isVerify, setIsVerify] = useState(false);
-  const [myKyc, setMyKyc] = useState<any>();
 
   const checkAddress = async () => {
     if (!address) {
