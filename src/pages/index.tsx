@@ -3,44 +3,76 @@ import { colors } from "@/utils/colors";
 import { Danger, TickCircle } from "iconsax-react";
 import { Container } from "@/components/Container";
 import { ButtonPrimary } from "@/components/Buttons";
+import useWeb3Store from "@/lib/useWeb3Store";
+import { useState } from "react";
 
 export default function Home() {
+  const { contract } = useWeb3Store();
+  const [showResult, setShowResult] = useState(false);
+  const [address, setAddress] = useState("");
+  const [error, setError] = useState("");
+  const [isVerify, setIsVerify] = useState(false);
+  const checkAddress = async (address: string | undefined) => {
+    if (!address) {
+      setError("Please enter address");
+      return;
+    }
+    try {
+      const isVerify = await contract?.check_kyc();
+      setShowResult(true);
+      // setIsVerify(!!isVerify);
+    } catch (error) {
+      console.log(error);
+      setShowResult(true);
+      setError("Wrong address");
+      setIsVerify(false);
+    }
+  };
   return (
     <Container>
       <CheckBlueTickCard>
         <CardHeading>Check Blue Tick</CardHeading>
         <InputContainer>
-          <Input placeholder="Enter wallet address" />
-          <CheckButton>Check</CheckButton>
+          <Input
+            placeholder="Enter wallet address"
+            value={address}
+            onChange={(e) => {
+              setShowResult(false);
+              setAddress(e.target.value);
+            }}
+          />
+          <CheckButton onClick={() => checkAddress(address)}>Check</CheckButton>
         </InputContainer>
 
-        <ResultContainer>
-          <p className="label">Result</p>
-          <div className="result">
-            {/* has result */}
-            {true ? (
-              <>
-                <span>0x825c848dD113E1Ac96aF68fB495C0988cafe602N</span>
-                {
-                  // is verified
-                  true ? (
-                    <span className="icon success">
-                      <TickCircle size={40} variant="Bold" />
-                    </span>
-                  ) : (
-                    <span className="icon danger">
-                      <Danger size={40} variant="Bold" />
-                    </span>
-                  )
-                }
-              </>
-            ) : (
-              <>
-                <span>Wrong address</span>
-              </>
-            )}
-          </div>
-        </ResultContainer>
+        {showResult && (
+          <ResultContainer>
+            <div className="result">
+              {/* has result */}
+              {!!error ? (
+                <>
+                  <span>{error}</span>
+                </>
+              ) : (
+                <>
+                  <p className="label">Result</p>
+                  <span>{address}</span>
+                  {
+                    // is verified
+                    isVerify ? (
+                      <span className="icon success">
+                        <TickCircle size={40} variant="Bold" />
+                      </span>
+                    ) : (
+                      <span className="icon danger">
+                        <Danger size={40} variant="Bold" />
+                      </span>
+                    )
+                  }
+                </>
+              )}
+            </div>
+          </ResultContainer>
+        )}
       </CheckBlueTickCard>
     </Container>
   );

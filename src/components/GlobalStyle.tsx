@@ -89,6 +89,8 @@ pre {
 
 a {
   background-color: transparent;
+  text-decoration: none;
+  color: inherit;
 }
 
 /**

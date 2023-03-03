@@ -26,6 +26,7 @@ export class Wallet {
   network: Network | NetworkId;
   createAccessKeyFor: string | undefined;
   accountId: string | undefined
+  contractAddress: string
 
   constructor({ createAccessKeyFor, network = 'testnet' }: { createAccessKeyFor: string | undefined; network?: Network | NetworkId}) {
     // Login to a wallet passing a contractId will create a local
@@ -37,6 +38,7 @@ export class Wallet {
     this.createAccessKeyFor = createAccessKeyFor
     this.network = 'testnet'
     this.accountId = undefined
+    this.contractAddress = CONTRACT_ADDRESS
   }
 
   // To be called when the website loads
@@ -74,9 +76,10 @@ export class Wallet {
   }
 
   // Make a read-only call to retrieve information from the network
-  async viewMethod({ contractId, method, args = {} }: {contractId: string; method: string; args: any}) {
+  async viewMethod({ contractId, method, args = {} }: {contractId: string; method: string; args?: any}) {
     if (!this.walletSelector) return
     const { network } = this.walletSelector.options;
+    console.log(network)
     const provider = new providers.JsonRpcProvider({ url: network.nodeUrl });
 
     let res: any = await provider.query({
