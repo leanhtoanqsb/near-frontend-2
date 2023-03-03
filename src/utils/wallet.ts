@@ -113,6 +113,27 @@ export class Wallet {
     });
   }
 
+  callMethods({contractId, transactionsArgs}: {contractId: string; transactionsArgs: {method: string, args?: any, gas?: string, deposit?: string}[]}) {
+    if (!this.wallet || !this.accountId) return
+    this.wallet.signAndSendTransactions({
+      transactions: transactionsArgs.map((transactionArgs) => {
+        return {
+          receiverId: contractId,
+          signerId: this.accountId,
+          actions: [{
+            type: "FunctionCall",
+            params: {
+              methodName: transactionArgs.method,
+              args: transactionArgs.args ?? {},
+              gas: transactionArgs.gas ?? '',
+              deposit: transactionArgs.deposit ?? '',
+            }
+          }]
+        }
+      })
+    })
+  }
+
   // Get transaction result from the network
   async getTransactionResult(txhash: string) {
     if (!this.walletSelector) return
