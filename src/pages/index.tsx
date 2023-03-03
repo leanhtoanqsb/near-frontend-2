@@ -46,6 +46,7 @@ export default function Home() {
 
         {showResult && (
           <ResultContainer>
+            <p className="label">Result</p>
             <div className="result">
               {/* has result */}
               {!!error ? (
@@ -54,7 +55,6 @@ export default function Home() {
                 </>
               ) : (
                 <>
-                  <p className="label">Result</p>
                   <span>{address}</span>
                   {
                     // is verified

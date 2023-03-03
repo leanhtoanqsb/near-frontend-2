@@ -24,4 +24,11 @@ export class Contract {
       contractId: this.wallet.contractAddress,
       method: "get_fee",
     })};
+
+    async add_wallet_to_kyc(address: string) {
+    return await this.wallet.callMethod({
+      contractId: this.wallet.contractAddress,
+      method: "add_wallet_to_kyc",
+      args: {address}
+    })};
 }

@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS='zk-blue-tick.dark2.testnet'
+export const CONTRACT_ADDRESS='zk-blue-tick.tny.testnet'
 
 /* A helper file that simplifies using the wallet selector */
 
@@ -8,8 +8,8 @@ import { providers } from 'near-api-js';
 // wallet selector UI
 import '@near-wallet-selector/modal-ui/styles.css';
 import { setupModal } from '@near-wallet-selector/modal-ui';
-import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
-import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
+// import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
+// import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
 
 // wallet selector options
 import { setupWalletSelector, WalletSelector, Wallet as NearWallet, Network, NetworkId } from '@near-wallet-selector/core';
@@ -93,7 +93,7 @@ export class Wallet {
   }
 
   // Call a method that changes the contract's state
-  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: any) {
+  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: {contractId: string, method: string, args: any, gas?: string, deposit?: string}) {
     // Sign a transaction with the "FunctionCall" action
     if (!this.wallet || !this.accountId) return
     return await this.wallet.signAndSendTransaction({
