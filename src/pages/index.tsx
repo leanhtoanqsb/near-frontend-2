@@ -12,6 +12,8 @@ export default function Home() {
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
   const [isVerify, setIsVerify] = useState(false);
+  const [myKyc, setMyKyc] = useState<any>();
+  console.log(myKyc);
 
   const checkAddress = async () => {
     if (!address) {
@@ -63,10 +65,10 @@ export default function Home() {
     }
   };
   const getMyKyc = async () => {
-    console.log("get my kyc");
     try {
       const result = await contract?.get_my_kyc();
-      console.log(result);
+      setMyKyc(result);
+      console.log("result", result);
     } catch (error) {
       console.log(error);
     }

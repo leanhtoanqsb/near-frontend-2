@@ -1,5 +1,7 @@
 import { Wallet } from "./wallet";
 
+const CONTRACT_FEE = '250000000000000000000000'
+
 export class Contract {
   contractId: string
   wallet: Wallet
@@ -7,12 +9,8 @@ export class Contract {
     this.contractId = contractId
     this.wallet = wallet
   }
-    async get_fee() {
-    return await this.wallet.viewMethod({
-      contractId: this.wallet.contractAddress,
-      method: "get_fee",
-    })};
 
+    // admin action
     async set_operator(args: {address: string; value: boolean}) {
       return await this.wallet.callMethod({
         contractId: this.wallet.contractAddress,
@@ -29,18 +27,21 @@ export class Contract {
       })
     }
 
+    // user action
     async add_wallet_to_kyc(address: string) {
     return await this.wallet.callMethod({
       contractId: this.wallet.contractAddress,
       method: "add_wallet_to_kyc",
-      args: {address}
+      args: {address},
+      deposit: CONTRACT_FEE
     })};
 
 
     async get_my_kyc() {
-    return await this.wallet.viewMethod({
+    return await this.wallet.callMethod({
       contractId: this.wallet.contractAddress,
       method: "get_my_kyc",
+      deposit: '1'
     })}
 
     async check_kyc(address: string) {

@@ -92,10 +92,11 @@ export class Wallet {
   }
 
   // Call a method that changes the contract's state
-  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: {contractId: string, method: string, args: any, gas?: string, deposit?: string}) {
+  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: {contractId: string, method: string, args?: any, gas?: string, deposit?: string}) {
     // Sign a transaction with the "FunctionCall" action
     if (!this.wallet || !this.accountId) return
-    return await this.wallet.signAndSendTransaction({
+    // const result =  await this.wallet.signAndSendTransaction({
+    this.wallet.signAndSendTransaction({
       signerId: this.accountId,
       receiverId: contractId,
       actions: [
@@ -109,7 +110,7 @@ export class Wallet {
           },
         },
       ],
-    });
+    }).then(res => console.log(res));
   }
 
   // Get transaction result from the network
