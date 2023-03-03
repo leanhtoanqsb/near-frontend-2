@@ -12,7 +12,7 @@ import { setupModal } from '@near-wallet-selector/modal-ui';
 // import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
 
 // wallet selector options
-import { setupWalletSelector, WalletSelector, Wallet as NearWallet, Network, NetworkId } from '@near-wallet-selector/core';
+import { setupWalletSelector, WalletSelector, Wallet as NearWallet, Network, NetworkId, FinalExecutionOutcome } from '@near-wallet-selector/core';
 import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
 
@@ -92,7 +92,7 @@ export class Wallet {
   }
 
   // Call a method that changes the contract's state
-  async callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: {contractId: string, method: string, args?: any, gas?: string, deposit?: string}) {
+  callMethod({ contractId, method, args = {}, gas = THIRTY_TGAS, deposit = NO_DEPOSIT }: {contractId: string, method: string, args?: any, gas?: string, deposit?: string}) {
     // Sign a transaction with the "FunctionCall" action
     if (!this.wallet || !this.accountId) return
     // const result =  await this.wallet.signAndSendTransaction({
@@ -110,7 +110,7 @@ export class Wallet {
           },
         },
       ],
-    }).then(res => console.log(res));
+    });
   }
 
   // Get transaction result from the network

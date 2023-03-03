@@ -4,7 +4,7 @@ import { Danger, TickCircle } from "iconsax-react";
 import { Container } from "@/components/Container";
 import { ButtonPrimary } from "@/components/Buttons";
 import useWeb3Store from "@/lib/useWeb3Store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const { contract, wallet } = useWeb3Store();
@@ -13,7 +13,6 @@ export default function Home() {
   const [error, setError] = useState("");
   const [isVerify, setIsVerify] = useState(false);
   const [myKyc, setMyKyc] = useState<any>();
-  console.log(myKyc);
 
   const checkAddress = async () => {
     if (!address) {
@@ -22,7 +21,6 @@ export default function Home() {
     }
     try {
       const isVerify = await contract?.check_kyc(address);
-      console.log(isVerify);
       setShowResult(true);
       setIsVerify(!!isVerify);
     } catch (error) {
@@ -35,22 +33,20 @@ export default function Home() {
 
   const setOperator = async () => {
     try {
-      const result = await contract?.set_operator({
+      contract?.set_operator({
         address: wallet?.accountId ?? "",
         value: true,
       });
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
   };
   const approveKyc = async () => {
     try {
-      const result = await contract?.approved_kyc({
+      contract?.approved_kyc({
         address: wallet?.accountId ?? "",
         identifyId: "1",
       });
-      console.log(result);
     } catch (error) {
       console.log(error);
     }
@@ -58,21 +54,34 @@ export default function Home() {
 
   const addAddressToKyc = async () => {
     try {
-      const result = await contract?.add_wallet_to_kyc(address);
-      console.log(result);
+      contract?.add_wallet_to_kyc(address);
     } catch (error) {
       console.log(error);
     }
   };
   const getMyKyc = async () => {
     try {
-      const result = await contract?.get_my_kyc();
-      setMyKyc(result);
-      console.log("result", result);
+      contract?.get_my_kyc();
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!wallet) return;
+    async function getResult() {
+      // Check if there is a transaction hash in the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const txhash = urlParams.get("transactionHashes");
+
+      if (txhash !== null) {
+        // Get result from the transaction
+        const result = await wallet?.getTransactionResult(txhash);
+        console.log(result);
+      }
+    }
+    getResult();
+  }, [wallet]);
 
   return (
     <Container>
