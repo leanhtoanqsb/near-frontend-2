@@ -7,20 +7,22 @@ import useWeb3Store from "@/lib/useWeb3Store";
 import { useState } from "react";
 
 export default function Home() {
-  const { contract } = useWeb3Store();
+  const { contract, wallet } = useWeb3Store();
   const [showResult, setShowResult] = useState(false);
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
   const [isVerify, setIsVerify] = useState(false);
-  const checkAddress = async (address: string | undefined) => {
+
+  const checkAddress = async () => {
     if (!address) {
       setError("Please enter address");
       return;
     }
     try {
-      const isVerify = await contract?.check_kyc();
+      const isVerify = await contract?.check_kyc(address);
+      console.log(isVerify);
       setShowResult(true);
-      // setIsVerify(!!isVerify);
+      setIsVerify(!!isVerify);
     } catch (error) {
       console.log(error);
       setShowResult(true);
@@ -28,6 +30,48 @@ export default function Home() {
       setIsVerify(false);
     }
   };
+
+  const setOperator = async () => {
+    try {
+      const result = await contract?.set_operator({
+        address: wallet?.accountId ?? "",
+        value: true,
+      });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const approveKyc = async () => {
+    try {
+      const result = await contract?.approved_kyc({
+        address: wallet?.accountId ?? "",
+        identifyId: "1",
+      });
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const addAddressToKyc = async () => {
+    try {
+      const result = await contract?.add_wallet_to_kyc(address);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const getMyKyc = async () => {
+    console.log("get my kyc");
+    try {
+      const result = await contract?.get_my_kyc();
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Container>
       <CheckBlueTickCard>
@@ -41,8 +85,17 @@ export default function Home() {
               setAddress(e.target.value);
             }}
           />
-          <CheckButton onClick={() => checkAddress(address)}>Check</CheckButton>
+          {/* <CheckButton onClick={() => checkAddress(address)}>Check</CheckButton> */}
         </InputContainer>
+        <ButtonPrimary onClick={() => setOperator()}>
+          Set operator
+        </ButtonPrimary>
+        <ButtonPrimary onClick={() => approveKyc()}>Approve kyc</ButtonPrimary>
+        <ButtonPrimary onClick={() => addAddressToKyc()}>
+          Add ddress to kyc
+        </ButtonPrimary>
+        <ButtonPrimary onClick={() => getMyKyc()}>Get my kyc</ButtonPrimary>
+        <CheckButton onClick={() => checkAddress()}>Check kyc</CheckButton>
 
         {showResult && (
           <ResultContainer>
