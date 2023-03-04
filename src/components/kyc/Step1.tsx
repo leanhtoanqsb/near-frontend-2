@@ -20,7 +20,7 @@ export default function Step1({ onNext }: { onNext: () => void }) {
             if (!file) return;
             setInfo((prev) => [
               ...prev,
-              "https://api.mintty.com/_upload_service/nft-image/71ad39cb-257c-407b-a2db-32c87668b2c6-1654611209207",
+              "https://near-frontend-d.vercel.app/cccd-1.png",
             ]);
           }}
         />
@@ -30,7 +30,7 @@ export default function Step1({ onNext }: { onNext: () => void }) {
             if (!file) return;
             setInfo((prev) => [
               ...prev,
-              "https://api.mintty.com/_upload_service/nft-image/71ad39cb-257c-407b-a2db-32c87668b2c6-1654611209207",
+              "https://near-frontend-d.vercel.app/cccd-2.png",
             ]);
           }}
         />
@@ -44,7 +44,7 @@ export default function Step1({ onNext }: { onNext: () => void }) {
             if (!file) return;
             setInfo((prev) => [
               ...prev,
-              "https://api.mintty.com/_upload_service/nft-image/71ad39cb-257c-407b-a2db-32c87668b2c6-1654611209207",
+              "https://near-frontend-d.vercel.app/bill.png",
             ]);
           }}
         />
