@@ -13,16 +13,17 @@ export default function Step2({ onNext }: { onNext: () => void }) {
   const [info, setInfo] = useState<string[]>([]);
 
   const { data } = useQuery(
-    [wallet?.accountId],
+    [wallet?.accountId, "step2"],
     async () => {
       const res = await axios.get(`api/kyc`, {
         params: { accountId: wallet?.accountId },
       });
-      return res?.data?.data?.[0] as KycInfo;
+      return res?.data?.data as KycInfo;
     },
     { enabled: !!wallet?.accountId }
   );
 
+  console.log(data);
   if (!data) return <></>;
   return (
     <>
@@ -32,6 +33,8 @@ export default function Step2({ onNext }: { onNext: () => void }) {
             <p className="heading">Proof Uploaded</p>
             <p className="info">Please wait for us to check</p>
             <p className="sub_info">It might be taken 1 - 2 bussiness days</p>
+            <div style={{ marginTop: "16px" }} />
+            <ButtonPrimary>Support</ButtonPrimary>
           </UploadedContainer>
         </>
       ) : (
