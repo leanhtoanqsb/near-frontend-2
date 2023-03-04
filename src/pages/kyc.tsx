@@ -34,6 +34,10 @@ export default function KYC() {
       setCurrentStep(3);
       return;
     }
+    if (data.hasProof) {
+      setCurrentStep(2);
+      return;
+    }
     if (data.kycInfo.length === 0) {
       setCurrentStep(1);
       return;

@@ -23,7 +23,7 @@ export default function Step2({ onNext }: { onNext: () => void }) {
     { enabled: !!wallet?.accountId }
   );
 
-  console.log(data);
+  if (!data) return <></>;
   return (
     <>
       {(data?.proof?.length ?? 0) > 0 ? (
