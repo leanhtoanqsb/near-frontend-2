@@ -16,41 +16,6 @@ import axios from "axios";
 
 export default function KYC() {
   const { wallet, contract, setKycWallets, kycWallets } = useWeb3Store();
-  const isFetched = useRef(false);
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const txhash = urlParams.get("transactionHashes");
-    async function getResult() {
-      if (txhash !== null) {
-        // Get result from the transaction
-        const result = (await wallet?.getTransactionResult(txhash)) as string[];
-        if (result.length > 0) {
-          setKycWallets(result);
-        }
-      }
-    }
-    if (!!txhash) {
-      if (!wallet) return;
-      getResult();
-      return;
-    } else {
-      if (
-        isFetched.current ||
-        !wallet?.accountId ||
-        !contract ||
-        kycWallets.length > 0
-      )
-        return;
-      try {
-        contract.get_my_kyc_address_list();
-        isFetched.current = true;
-      } catch (error) {
-        isFetched.current = true;
-        console.log(error);
-      }
-    }
-  }, [wallet?.accountId]);
-
   const [currentStep, setCurrentStep] = useState(1);
 
   const { data, isLoading } = useQuery(

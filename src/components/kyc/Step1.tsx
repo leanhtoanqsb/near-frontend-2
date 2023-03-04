@@ -51,7 +51,7 @@ export default function Step1({ onNext }: { onNext: () => void }) {
       </ContentContainer>
       <ButtonPrimary
         style={{ marginTop: "40px" }}
-        // disabled={info.length < 3}
+        disabled={info.length < 3}
         onClick={() => {
           try {
             axios
