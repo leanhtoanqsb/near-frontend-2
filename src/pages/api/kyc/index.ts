@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   const { method, url } = req;
   const urlParams = new URLSearchParams(url);
-  const accountId = urlParams.get("accountId");
+  const accountId = urlParams.get("/api/kyc?accountId");
 
   await dbConnect();
 
@@ -16,7 +16,7 @@ export default async function handler(
     case "GET":
       try {
         if (accountId) {
-          const pets = await Kyc.find({
+          const pets = await Kyc.findOne({
             accountId,
           }); /* find all the data in our database */
           res.status(200).json({ success: true, data: pets });

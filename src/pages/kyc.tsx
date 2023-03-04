@@ -24,7 +24,7 @@ export default function KYC() {
       const res = await axios.get(`api/kyc`, {
         params: { accountId: wallet?.accountId },
       });
-      return res?.data?.data?.[0] as KycInfo;
+      return res?.data?.data as KycInfo;
     },
     { enabled: !!wallet?.accountId }
   );
@@ -54,7 +54,7 @@ export default function KYC() {
           <StepLinkIndicator isActive={currentStep > 1} />
           <StepItem isActive={currentStep >= 2}>
             <p className="heading">Step 2</p>
-            <p className="description">Uload proof</p>
+            <p className="description">Upload proof</p>
           </StepItem>
           <StepLinkIndicator isActive={currentStep >= 2} />
           <StepItem isActive={currentStep === 3}>
