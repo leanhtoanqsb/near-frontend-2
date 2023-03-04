@@ -75,6 +75,9 @@ export async function getStaticProps() {
         process.env.OPERATOR_1 ?? null,
         process.env.OPERATOR_2 ?? null,
         process.env.OPERATOR_3 ?? null,
+        process.env.OPERATOR_4 ?? null,
+        process.env.OPERATOR_5 ?? null,
+        process.env.OPERATOR_6 ?? null,
       ],
     },
   };
