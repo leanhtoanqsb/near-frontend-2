@@ -2,9 +2,10 @@ import { useEffect } from "react";
 import styled from "styled-components";
 import { ButtonOutlinePrimary, ButtonPrimary } from "./Buttons";
 import { CONTRACT_ADDRESS, Wallet } from "@/utils/wallet";
-import useWeb3Store from "@/lib/useWeb3Store";
+import useWeb3Store from "@/store/useWeb3Store";
 import { Contract } from "@/utils/near.interface";
 import Link from "next/link";
+import { colors } from "@/utils/colors";
 
 // burden icon buyer immense there ride pen gold among dumb dash staff
 
@@ -20,7 +21,7 @@ export default function Navbar() {
   useEffect(() => {
     async function main() {
       try {
-        const wallet = await new Wallet({
+        const wallet = new Wallet({
           createAccessKeyFor: CONTRACT_ADDRESS,
         });
         const isSignedIn = await wallet.startUp();
@@ -40,7 +41,7 @@ export default function Navbar() {
   return (
     <NavbarContainer>
       <Link href="/">
-        <p>Logo</p>
+        <Logo>ZK-TICK</Logo>
       </Link>
 
       {isSignedIn ? (
@@ -62,8 +63,17 @@ export default function Navbar() {
 }
 
 const NavbarContainer = styled.div`
+  max-width: 1232px;
+  margin: 0 auto;
   padding: 40px 16px 0 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const Logo = styled.p`
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: 700;
+  color: ${colors.primary1};
 `;

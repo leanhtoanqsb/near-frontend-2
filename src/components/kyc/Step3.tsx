@@ -1,9 +1,28 @@
+import useWeb3Store from "@/store/useWeb3Store";
 import { TickCircle } from "iconsax-react";
+import { useEffect } from "react";
 import styled from "styled-components";
 import { ButtonPrimary } from "../../components/Buttons";
 import { colors } from "../../utils/colors";
 
 export default function Step3() {
+  const { wallet } = useWeb3Store();
+
+  useEffect(() => {
+    if (!wallet) return;
+    async function getResult() {
+      // Check if there is a transaction hash in the URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const txhash = urlParams.get("transactionHashes");
+
+      if (txhash !== null) {
+        // Get result from the transaction
+        const result = await wallet?.getTransactionResult(txhash);
+        console.log(result);
+      }
+    }
+    getResult();
+  }, [wallet]);
   return (
     <>
       <Step3Title>Your KYC request has been approved</Step3Title>

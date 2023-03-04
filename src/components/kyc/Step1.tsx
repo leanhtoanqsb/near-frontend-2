@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { ButtonPrimary } from "../Buttons";
 import Uploader from "../Uploader";
 import { colors } from "../../utils/colors";
+import { useMutation } from "react-query";
+import axios from "axios";
 
 export default function Step1() {
   return (
@@ -24,7 +26,19 @@ export default function Step1() {
           onChange={(file) => console.log(file)}
         />
       </ContentContainer>
-      <ButtonPrimary style={{ marginTop: "40px" }}>Send Request</ButtonPrimary>
+      <ButtonPrimary
+        style={{ marginTop: "40px" }}
+        onClick={() => {
+          axios
+            .post("/api/kyc", {
+              identifyId: "1",
+              accountId: "leanhtoan1191-2.testnet",
+            })
+            .then((res) => console.log(res));
+        }}
+      >
+        Send Request
+      </ButtonPrimary>
     </>
   );
 }

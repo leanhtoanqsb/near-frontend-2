@@ -3,11 +3,12 @@ import { colors } from "@/utils/colors";
 import { Danger, TickCircle } from "iconsax-react";
 import { Container } from "@/components/Container";
 import { ButtonPrimary } from "@/components/Buttons";
-import useWeb3Store from "@/lib/useWeb3Store";
+import useWeb3Store from "@/store/useWeb3Store";
 import { useEffect, useState } from "react";
+import Tooltip from "@/components/Tooltip";
 
 export default function Home() {
-  const { contract, wallet } = useWeb3Store();
+  const { contract, wallet, isSignedIn } = useWeb3Store();
   const [showResult, setShowResult] = useState(false);
   const [address, setAddress] = useState("");
   const [error, setError] = useState("");
@@ -30,16 +31,6 @@ export default function Home() {
     }
   };
 
-  const setOperator = async () => {
-    try {
-      contract?.set_operator({
-        address: wallet?.accountId ?? "",
-        value: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const approveKyc = async () => {
     try {
       contract?.approved_kyc({
@@ -66,28 +57,13 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    if (!wallet) return;
-    async function getResult() {
-      // Check if there is a transaction hash in the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const txhash = urlParams.get("transactionHashes");
-
-      if (txhash !== null) {
-        // Get result from the transaction
-        const result = await wallet?.getTransactionResult(txhash);
-        console.log(result);
-      }
-    }
-    getResult();
-  }, [wallet]);
-
   return (
     <Container>
       <CheckBlueTickCard>
         <CardHeading>Check Blue Tick</CardHeading>
         <InputContainer>
           <Input
+            tabIndex={1}
             placeholder="Enter wallet address"
             value={address}
             onChange={(e) => {
@@ -95,17 +71,14 @@ export default function Home() {
               setAddress(e.target.value);
             }}
           />
-          {/* <CheckButton onClick={() => checkAddress(address)}>Check</CheckButton> */}
+          {isSignedIn ? (
+            <CheckButton tabIndex={2} onClick={() => checkAddress()}>
+              Check
+            </CheckButton>
+          ) : (
+            <Tooltip tooltipText="You must connect wallet first">Check</Tooltip>
+          )}
         </InputContainer>
-        <ButtonPrimary onClick={() => setOperator()}>
-          Set operator
-        </ButtonPrimary>
-        <ButtonPrimary onClick={() => approveKyc()}>Approve kyc</ButtonPrimary>
-        <ButtonPrimary onClick={() => addAddressToKyc()}>
-          Add ddress to kyc
-        </ButtonPrimary>
-        <ButtonPrimary onClick={() => getMyKyc()}>Get my kyc</ButtonPrimary>
-        <CheckButton onClick={() => checkAddress()}>Check kyc</CheckButton>
 
         {showResult && (
           <ResultContainer>
@@ -155,6 +128,7 @@ const CardHeading = styled.div`
     rgba(30, 30, 30, 0.5) 11.94%,
     rgba(6, 3, 20, 0.5) 38.06%
   );
+  backdrop-filter: blur(15px);
   color: ${colors.primary1};
   font-size: 32px;
   line-height: 32px;
@@ -164,7 +138,7 @@ const CardHeading = styled.div`
 const InputContainer = styled.div`
   display: flex;
   gap: 16px;
-  padding: 32px;
+  padding: 16px;
   background: white;
   & > * {
     font-size: 32px;
@@ -176,6 +150,8 @@ const Input = styled.input`
   flex: 1;
   background: transparent;
   border: none;
+  padding: 16px;
+  color: black;
 `;
 const CheckButton = styled(ButtonPrimary)`
   flex-shrink: 0;

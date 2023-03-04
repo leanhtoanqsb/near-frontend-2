@@ -53,7 +53,6 @@ export default function Uploader({
     setFile(null);
     if (onChange) onChange(null);
   }, [file, onChange]);
-  console.log(file);
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
       <Label>{label}</Label>

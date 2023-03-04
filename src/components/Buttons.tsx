@@ -2,9 +2,10 @@ import styled from "styled-components";
 import { colors } from "../utils/colors";
 
 export const ButtonPrimary = styled.button`
-  font-size: 16px;
-  line-height: 16px;
+  line-height: 16px !important;
+  font-size: 16px !important;
   padding: 16px;
+  font-weight: 600;
   background-color: #52df9b;
 `;
 export const ButtonOutlinePrimary = styled.button`

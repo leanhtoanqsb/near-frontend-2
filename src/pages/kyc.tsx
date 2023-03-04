@@ -1,4 +1,5 @@
 import { TickCircle } from "iconsax-react";
+import Kyc from "@/model/Kyc";
 import { useState } from "react";
 import styled from "styled-components";
 import { ButtonPrimary } from "@/components/Buttons";
@@ -8,9 +9,15 @@ import { colors } from "@/utils/colors";
 import Step1 from "@/components/kyc/Step1";
 import Step2 from "@/components/kyc/Step2";
 import Step3 from "@/components/kyc/Step3";
+import { useQuery } from "react-query";
+import useWeb3Store from "@/store/useWeb3Store";
+import axios from "axios";
+// import dbConnect from "@/lib/dbConnect";
 
 export default function KYC() {
+  const { wallet } = useWeb3Store();
   const [currentStep, setCurrentStep] = useState(1);
+
   return (
     <Container>
       <KYCContainer>
@@ -45,6 +52,20 @@ export default function KYC() {
     </Container>
   );
 }
+
+/* Retrieves pet(s) data from mongodb database */
+// export async function getServerSideProps() {
+//   await dbConnect();
+
+//   /* find all the data in our database */
+//   const result = await Kyc.find({});
+//   const kycs = result.map((doc) => {
+//     const kyc = doc.toObject();
+//     return kyc;
+//   });
+
+//   return { props: { kycs } };
+// }
 
 const KYCContainer = styled.div`
   display: flex;
