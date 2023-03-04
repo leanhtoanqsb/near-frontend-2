@@ -31,32 +31,6 @@ export default function Home() {
     }
   };
 
-  const approveKyc = async () => {
-    try {
-      contract?.approved_kyc({
-        address: wallet?.accountId ?? "",
-        identifyId: "1",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const addAddressToKyc = async () => {
-    try {
-      contract?.add_wallet_to_kyc(address);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const getMyKyc = async () => {
-    try {
-      contract?.get_my_kyc();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <Container>
       <CheckBlueTickCard>

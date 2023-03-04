@@ -7,9 +7,11 @@ interface Store {
   isSignedIn: boolean;
   contractAddress: string;
   contract: Contract | null;
+  kycWallets: string[];
   setWallet: (wallet: any) => void;
   setIsSignedIn: (isSignedIn: boolean) => void;
   setContract: (contract: Contract) => void;
+  setKycWallets: (wallet: string | string[]) => void;
 }
 
 const useWeb3Store = create<Store>()((set) => ({
@@ -17,6 +19,7 @@ const useWeb3Store = create<Store>()((set) => ({
   isSignedIn: false,
   contractAddress: CONTRACT_ADDRESS,
   contract: null,
+  kycWallets: [],
   setWallet: (wallet: any) =>
     set({
       wallet,
@@ -28,6 +31,17 @@ const useWeb3Store = create<Store>()((set) => ({
   setContract: (contract: Contract) =>
     set({
       contract,
+    }),
+  setKycWallets: (wallet: string | string[]) =>
+    set((state) => {
+      if (typeof wallet === "string") {
+        return {
+          kycWallets: [...state.kycWallets, wallet],
+        };
+      }
+      return {
+        kycWallets: wallet,
+      };
     }),
 }));
 

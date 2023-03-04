@@ -1,6 +1,6 @@
 import { TickCircle } from "iconsax-react";
-import Kyc from "@/model/Kyc";
-import { useState } from "react";
+import Kyc, { KycInfo } from "@/model/Kyc";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { ButtonPrimary } from "@/components/Buttons";
 import { Container } from "@/components/Container";
@@ -15,8 +15,68 @@ import axios from "axios";
 // import dbConnect from "@/lib/dbConnect";
 
 export default function KYC() {
-  const { wallet } = useWeb3Store();
+  const { wallet, contract, setKycWallets, kycWallets } = useWeb3Store();
+  const isFetched = useRef(false);
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const txhash = urlParams.get("transactionHashes");
+    async function getResult() {
+      if (txhash !== null) {
+        // Get result from the transaction
+        const result = (await wallet?.getTransactionResult(txhash)) as string[];
+        if (result.length > 0) {
+          setKycWallets(result);
+        }
+      }
+    }
+    if (!!txhash) {
+      if (!wallet) return;
+      getResult();
+      return;
+    } else {
+      if (
+        isFetched.current ||
+        !wallet?.accountId ||
+        !contract ||
+        kycWallets.length > 0
+      )
+        return;
+      try {
+        contract.get_my_kyc_address_list();
+        isFetched.current = true;
+      } catch (error) {
+        isFetched.current = true;
+        console.log(error);
+      }
+    }
+  }, [wallet?.accountId]);
+
   const [currentStep, setCurrentStep] = useState(1);
+
+  const { data, isLoading } = useQuery(
+    [wallet?.accountId],
+    async () => {
+      const res = await axios.get(`api/kyc`, {
+        params: { accountId: wallet?.accountId },
+      });
+      return res?.data?.data?.[0] as KycInfo;
+    },
+    { enabled: !!wallet?.accountId }
+  );
+  useEffect(() => {
+    if (!data) return;
+    if (data.isApproved) {
+      setCurrentStep(3);
+      return;
+    }
+    if (data.kycInfo.length === 0) {
+      setCurrentStep(1);
+      return;
+    }
+    setCurrentStep(2);
+  }, [data]);
+
+  if (!wallet?.accountId || isLoading) return <></>;
 
   return (
     <Container>
@@ -40,10 +100,14 @@ export default function KYC() {
 
         <ContentWrapper style={{ width: "100%" }}>
           {/* Step 1 */}
-          {currentStep === 1 ? <Step1 /> : null}
+          {currentStep === 1 ? (
+            <Step1 onNext={() => setCurrentStep(2)} />
+          ) : null}
 
           {/* Step 2 */}
-          {currentStep === 2 ? <Step2 /> : null}
+          {currentStep === 2 ? (
+            <Step2 onNext={() => setCurrentStep(3)} />
+          ) : null}
 
           {/* Step 3 */}
           {currentStep === 3 ? <Step3 /> : null}
@@ -52,20 +116,6 @@ export default function KYC() {
     </Container>
   );
 }
-
-/* Retrieves pet(s) data from mongodb database */
-// export async function getServerSideProps() {
-//   await dbConnect();
-
-//   /* find all the data in our database */
-//   const result = await Kyc.find({});
-//   const kycs = result.map((doc) => {
-//     const kyc = doc.toObject();
-//     return kyc;
-//   });
-
-//   return { props: { kycs } };
-// }
 
 const KYCContainer = styled.div`
   display: flex;

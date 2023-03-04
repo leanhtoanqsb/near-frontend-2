@@ -16,7 +16,7 @@ export default async function handler(
     case "GET":
       try {
         if (accountId) {
-          const pets = await Kyc.findOne({
+          const pets = await Kyc.find({
             accountId,
           }); /* find all the data in our database */
           res.status(200).json({ success: true, data: pets });
